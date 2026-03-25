@@ -17,4 +17,10 @@ public class SwapAnimation {
         timer++;
         if (timer >= duration) active = false;
     }
+
+    public float progress() {
+        return active ? (float)timer / duration : 1.0f;
+    }
+
 }
+

@@ -1,17 +1,23 @@
 package ui;
 
 import processing.core.PApplet;
-import systems.Upgrade;
-import core.Game;
+import systems.TileStats;
+import systems.UpgradeType;
 
 public class UpgradeButton extends Button {
 
-    private Upgrade upgrade;
-    private UIManager ui;
+    private final UpgradeType type;
+    private final TileStats stats;
+    private final UIManager ui;
 
-    public UpgradeButton(int x, int y, int w, int h, Upgrade upgrade, UIManager ui) {
-        super(x, y, w, h, upgrade.name, null);
-        this.upgrade = upgrade;
+    public UpgradeButton(int x, int y, int w, int h,
+                         UpgradeType type, TileStats stats,
+                         int tileR, int tileC, UIManager ui) {
+
+        super(x, y, w, h, "", null);
+
+        this.type = type;
+        this.stats = stats;
         this.ui = ui;
 
         this.onClick = () -> {
@@ -22,32 +28,59 @@ public class UpgradeButton extends Button {
     }
 
     private boolean canPurchase() {
-        return !upgrade.isMaxed() &&
-                ui.getGame().getCurrency().getMoney() >= upgrade.getCost();
+        double cost = getCost();
+        return ui.getGame().getCurrency().canAfford(cost);
+    }
+
+    private double getCost() {
+        return switch (type) {
+            case ARRAY_SIZE -> 10 + stats.levelArraySize * 5;
+            case SORT_SPEED -> 20 + stats.levelSortSpeed * 10;
+            case PAYOUT_MULTIPLIER -> 30 + stats.levelPayout * 15;
+            case AUTO_SORT -> Double.POSITIVE_INFINITY; // not used in tile panel
+        };
+    }
+
+    private boolean isMaxed() {
+        return switch (type) {
+            case ARRAY_SIZE -> stats.levelArraySize >= 100;
+            case SORT_SPEED -> stats.levelSortSpeed >= 50;
+            case PAYOUT_MULTIPLIER -> stats.levelPayout >= 100;
+            case AUTO_SORT -> true; // always treated as maxed here
+        };
     }
 
     private void purchase() {
-        Game game = ui. getGame();
+        double cost = getCost();
+        ui.getGame().getCurrency().spendMoney(cost);
 
-        game.getCurrency().spendMoney(upgrade.getCost());
-        upgrade.level++;
-
-        switch (upgrade.type) {
-            case SORT_SPEED -> game.setStepDelay(Math.max(1, game.getStepDelay() - 1));
-            case ARRAY_SIZE -> game.increaseArraySize(1);
-            case PAYOUT_MULTIPLIER -> game.getCurrency().addMultiplier(0.1);
-            case AUTO_SORT -> game.enableAutoSort();
+        switch (type) {
+            case ARRAY_SIZE -> {
+                stats.arraySize++;
+                stats.levelArraySize++;
+            }
+            case SORT_SPEED -> {
+                stats.sortSpeed++;
+                stats.levelSortSpeed++;
+            }
+            case PAYOUT_MULTIPLIER -> {
+                stats.payoutMultiplier += 0.1;
+                stats.levelPayout++;
+            }
+            case AUTO_SORT -> {
+                // no-op in this panel; one-time upgrades will live elsewhere
+            }
         }
     }
 
     @Override
     public void draw(PApplet app) {
-        if (upgrade.isMaxed()) {
+        if (isMaxed()) {
             drawGreyedOut(app, "MAX");
         } else if (!canPurchase()) {
-            drawGreyedOut(app, "$" + (int)upgrade.getCost());
+            drawGreyedOut(app, "$" + (int)getCost());
         } else {
-            drawActive(app, "$" + (int)upgrade.getCost());
+            drawActive(app, "$" + (int)getCost());
         }
     }
 }

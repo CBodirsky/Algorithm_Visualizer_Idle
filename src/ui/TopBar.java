@@ -32,6 +32,10 @@ public class TopBar {
         app.popStyle();
     }
 
+    public boolean isMenuButtonClicked(PApplet app) {
+        return menuButton.isMouseOver(app);
+    }
+
     public boolean handleClick(PApplet app) {
         menuButton.handleClick(app);
         return true;
