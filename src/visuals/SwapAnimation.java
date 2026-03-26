@@ -1,3 +1,6 @@
+
+//I keep forgetting this is down in visuals! Makes it fun figuring out where the routing goes.
+//Only file at the moment in visuals, but handles logic related to the swap animations.
 package visuals;
 
 public class SwapAnimation {
@@ -9,8 +12,8 @@ public class SwapAnimation {
     public void start(int a, int b) {
         this.a = a;
         this.b = b;
-        timer = 0;
-        active = true;
+        this.timer = 0;
+        this.active = true;
     }
 
     public void update() {

@@ -1,3 +1,6 @@
+
+// Cocktail Shaker Sort is a bidirectional sort, using the same method as bubble sort,
+// pushing largest to the left, but then moves right, pushing the smallest left, repeat
 package algorithms;
 
 public class CocktailShakerSort implements SortAlgorithm {
@@ -43,6 +46,11 @@ public class CocktailShakerSort implements SortAlgorithm {
 
     public int[] getArray() {
         return arr;
+    }
+
+    @Override
+    public String getName() {
+        return "Cocktail";
     }
 
     // returns true when finished

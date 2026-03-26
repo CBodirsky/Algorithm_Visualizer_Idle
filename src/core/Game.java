@@ -1,3 +1,6 @@
+
+//Main game file. Initializes systems, manages camera controls, and runs the main
+//draw loop.
 package core;
 
 import processing.core.PApplet;
@@ -22,19 +25,25 @@ public class Game extends PApplet {
 
     public static final int STARTING_STEP_DELAY = 10;
     int totalSorts = 0;
-    int prestige = 0;
+    int prestige = 15;
 
     //Setters and getters
     public UpgradeSystem getUpgrades() {
         return upgrades;
     }
 
+    public int getAvailableAlgorithms() {
+        return 4; // Bubble, cocktail, insertion, selection for now
+    }
+
+
     public CurrencySystem getCurrency() {
         return currency;
     }
     public TileGrid getGrid() { return grid; }
 
-    //Makes arrays
+    //Creates a shuffled array with values within the array range to
+    //give consistent bar height easily.
     public int[] generateArray(int size) {
         int[] arr = new int[size];
         //Fill with number range
@@ -64,12 +73,25 @@ public class Game extends PApplet {
     public void setup() {
         currency = new CurrencySystem();
         upgrades = new UpgradeSystem();
+        //Temp set grid layout
         grid = new TileGrid(4, 4, this);
+
         ui = new UIManager(this, this);
+        //Nothing like having to call (this, this).
+        //One is PApplet and the other is Game
     }
 
+    //These next two control the camera.
+//    public void mouseDragged() {
+//        if (mouseButton == RIGHT) {
+//            cameraX += (mouseX - pmouseX);
+//            cameraY += (mouseY - pmouseY);
+//        }
+//    }
+
+    //Because laptop, just doing left click to drag
     public void mouseDragged() {
-        if (mouseButton == RIGHT) {
+        if (!ui.handleClick(this)) {
             cameraX += (mouseX - pmouseX);
             cameraY += (mouseY - pmouseY);
         }
@@ -87,8 +109,10 @@ public class Game extends PApplet {
         }
     }
 
+    //Main visualization loop: updates the simulation, draws grids, and
+    //then draws the UI on top.
     public void draw() {
-        background(0);
+        background(40);
 
         pushMatrix();
         translate(cameraX, cameraY);

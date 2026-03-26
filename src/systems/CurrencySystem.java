@@ -2,7 +2,7 @@ package systems;
 
 public class CurrencySystem {
 
-    private double money = 0;
+    private double money = 100000;
     private double basePayment = 1.0;
     private double moneyMultiplier = 1.0;
 

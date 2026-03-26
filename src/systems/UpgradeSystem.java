@@ -1,3 +1,6 @@
+
+//Manages upgrades, which at the moment is purposefully unbalanced.
+//Initializes all upgrade types with their max levels, costs, and effects.
 package systems;
 
 import core.Game;

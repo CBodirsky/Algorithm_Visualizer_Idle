@@ -1,3 +1,6 @@
+
+// Standardize algorithm outputs
+
 package algorithms;
 
 public interface SortAlgorithm {
@@ -17,4 +20,6 @@ public interface SortAlgorithm {
     int[] getSwapIndices();
 
     int[] getArray();
+
+    String getName();
 }

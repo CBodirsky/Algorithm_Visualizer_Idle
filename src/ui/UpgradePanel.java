@@ -1,3 +1,6 @@
+
+//Full screen panel that lists upgrades for each tile and the related
+//algorithm swap option into a table layout.
 package ui;
 
 import processing.core.PApplet;
@@ -28,7 +31,7 @@ public class UpgradePanel extends Panel {
     private static final int BTN_W_ARRAY  = 180;
     private static final int BTN_W_SPEED  = 180;
     private static final int BTN_W_PAYOUT = 180;
-    // later: private static final int BTN_W_ALGO = 200;
+    private static final int BTN_W_ALGO = 200;
 
     public UpgradePanel(UIManager ui) {
         this.ui = ui;
@@ -43,6 +46,7 @@ public class UpgradePanel extends Panel {
 
         int y = START_Y;
 
+        //Draws out the buttons in a table.
         for (int r = 0; r < grid.rows; r++) {
             for (int c = 0; c < grid.cols; c++) {
 
@@ -66,11 +70,19 @@ public class UpgradePanel extends Panel {
                         UpgradeType.PAYOUT_MULTIPLIER, stats, r, c, ui
                 ));
 
+                // Algorithm Select
+                upgradeButtons.add(new UpgradeButton(
+                        COL_X_ALGO, y, 120, 40,
+                        UpgradeType.ALGORITHM, stats, r, c, ui
+                ));
+
+
                 y += ROW_HEIGHT;
             }
         }
     }
 
+    //Draws the buttons themselves and related factors.
     @Override
     public void draw(PApplet app) {
         app.pushStyle();
@@ -103,6 +115,7 @@ public class UpgradePanel extends Panel {
 
 
 
+    //Click handling logic.
     @Override
     public void handleClick(PApplet app) {
 

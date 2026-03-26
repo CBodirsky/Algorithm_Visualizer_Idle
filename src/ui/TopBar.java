@@ -1,3 +1,5 @@
+
+//The top bar with stats and basic information in gameplay.
 package ui;
 
 import processing.core.PApplet;

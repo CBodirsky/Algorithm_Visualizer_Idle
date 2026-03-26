@@ -1,3 +1,5 @@
+
+//Code for the side menu allowing access to other panels.
 package ui;
 
 import processing.core.PApplet;

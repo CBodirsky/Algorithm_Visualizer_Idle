@@ -1,3 +1,5 @@
+
+//Basic button interaction, handles drawing and the click callback.
 package ui;
 
 import processing.core.PApplet;

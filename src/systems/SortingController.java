@@ -1,9 +1,11 @@
+
+//The heart of the system. Controls a given tile's sorting behavior, pacing, and
+//the swap animations.
 package systems;
 
 import core.Game;
 import algorithms.SortAlgorithm;
 import visuals.SwapAnimation;
-import algorithms.BubbleSort;
 
 import processing.core.PApplet;
 
@@ -13,6 +15,8 @@ public class SortingController {
         private SwapAnimation swapAnim;
         private Game game;
         private TileStats stats;
+
+        public int stepCooldown = 0;
 
         public SortingController(SortAlgorithm algorithm, SwapAnimation swapAnim, Game game, TileStats stats) {
                 this.algorithm = algorithm;
@@ -29,9 +33,9 @@ public class SortingController {
                 swapAnim.update();
         }
 
-        public int[] getActiveIndices() {
-                return algorithm.getActiveIndices();
-        }
+//        public int[] getActiveIndices() {
+//                return algorithm.getActiveIndices();
+//        }
 
         public int[] getSwapIndices() {
                 return swapAnim.active ? new int[]{swapAnim.a, swapAnim.b} : null;
@@ -44,18 +48,22 @@ public class SortingController {
         public void triggerSwapAnimation() {
                 int[] swap = algorithm.getSwapIndices();
                 if (swap == null) return;
-                swapAnim.duration = 8;
+                swapAnim.duration = Math.max(5, stats.sortSpeed);
                 swapAnim.start(swap[0], swap[1]);
+                stepCooldown = 0;
+
+        }
+
+        public int getSortSpeed() {
+                return stats.sortSpeed;
         }
 
         public int[] getArray() {
                 return algorithm.getArray();
         }
 
-        /**
-         * Performs one algorithm step.
-         * Returns true if a swap occurred (so Game knows to animate).
-         */
+        // Advance the algorithm by one comparison or swap.
+        // Returns true if a swap occured (so TileGrid can trigger animation).
         public boolean step() {
                 return algorithm.step();
         }
@@ -64,6 +72,7 @@ public class SortingController {
                 return algorithm;
         }
 
+        //Draws the tile's bars, highlight active comparisons and animation swaps.
         public void draw(PApplet app, float w, float h) {
                 int[] arr = algorithm.getArray();
                 int n = arr.length;
@@ -82,6 +91,7 @@ public class SortingController {
                         //position of animation
                         float x = i * barW;
 
+                        //Performs the animation of the swap
                         if (swap != null && swapAnim.active) {
                                 int a = swap[0];
                                 int b = swap[1];
@@ -111,16 +121,23 @@ public class SortingController {
                                 }
                         }
 
+                        //Coloring of related bars
                         if (isSwapping) {
-                                app.fill(255, 100, 100);
+                                app.fill(80, 255, 80);
                         } else if (isActive) {
-                                app.fill(100, 150, 255);
+                                app.fill(255, 200, 0);
                         } else {
-                                app.fill(200);
+                                app.fill(70, 90, 140);
                         }
 
                         app.rect(x, h - barH, barW, barH);
+                        app.fill(240);
+                        app.textSize(14);
+                        app.textAlign(PApplet.LEFT, PApplet.TOP);
+
+
                 }
+                app.text(algorithm.getName(), 4, 4);
         }
 
 

@@ -1,3 +1,6 @@
+
+// Bubble Sort performs a comparison at each step, swapping if the second item
+// is smaller, pushing larger items right to the end.
 package algorithms;
 
 public class BubbleSort implements SortAlgorithm {
@@ -36,6 +39,11 @@ public class BubbleSort implements SortAlgorithm {
 
     public int[] getArray() {
         return arr;
+    }
+
+    @Override
+    public String getName() {
+        return "Bubble";
     }
 
     // returns true when finished

@@ -1,3 +1,5 @@
+
+// Handles the UI overall.
 package ui;
 
 import core.Game;
@@ -18,6 +20,7 @@ public class UIManager {
         return topBar.height;
     }
 
+    //Receives both the Game and PApplet, which handles the state and the drawing respectively.
     public UIManager(Game game, PApplet app) {
         this.game = game;
         this.app = app;
@@ -26,7 +29,7 @@ public class UIManager {
         sideMenu = new SideMenu(this, app);
         upgradePanel = new UpgradePanel(this);
 
-        //New Sort button
+        //New Sort button. Will be implemented again with progression system in place.
 //        newSortButton = new Button(
 //                20, 50, 150, 40, "New Sort",
 //                () -> game.startNewSort()
@@ -37,11 +40,14 @@ public class UIManager {
         return game;
     }
 
+    //Draws the UI in layers.
     public void draw(PApplet app, double money, int sorts, int prestige) {
 
         // --- Layer 1: Top bar background ---
         topBar.drawBackground(app);
 
+        // --- Layer 1.5: Button on initial tile to manual start a new sort.
+        // Not implemented yet.
 //        if(game.isSortFinished() && !upgradeOpen && !menuOpen) {
 //            newSortButton.draw(app);
 //        }
