@@ -15,6 +15,7 @@ public class UpgradePanel extends Panel {
 
     private Button closeButton;
     private List<UpgradeButton> upgradeButtons = new ArrayList<>();
+    private List<Integer> tileLabelY = new ArrayList<>();
     private UIManager ui;
 
     // Layout constants
@@ -39,16 +40,24 @@ public class UpgradePanel extends Panel {
         TileGrid grid = ui.getGame().getGrid();
 
         closeButton = new Button(
-                20, 60, 120, 40,
+                100, 60, 120, 40,
                 "Close",
-                ui::closeUpgradePanel
+                ui::closeCurrentPanel
         );
 
         int y = START_Y;
 
-        //Draws out the buttons in a table.
-        for (int r = 0; r < grid.rows; r++) {
-            for (int c = 0; c < grid.cols; c++) {
+        int size = ui.getGame().getGridSize();
+        int unlocked = ui.getGame().unlockedTiles;
+
+        int count = 0;
+
+        for (int r = 0; r < size; r++) {
+            for (int c = 0; c < size; c++) {
+
+                if (count >= unlocked)
+                    return; // stop generating buttons
+                tileLabelY.add(y);
 
                 TileStats stats = grid.stats[r][c];
 
@@ -72,20 +81,28 @@ public class UpgradePanel extends Panel {
 
                 // Algorithm Select
                 upgradeButtons.add(new UpgradeButton(
-                        COL_X_ALGO, y, 120, 40,
+                        COL_X_ALGO, y, BTN_W_ALGO, 40,
                         UpgradeType.ALGORITHM, stats, r, c, ui
                 ));
 
-
                 y += ROW_HEIGHT;
+                count++;
             }
         }
+
     }
 
     //Draws the buttons themselves and related factors.
     @Override
     public void draw(PApplet app) {
         app.pushStyle();
+        app.fill(255);
+        app.textSize(30);
+        app.textAlign(PApplet.LEFT, PApplet.TOP);
+
+        for (int i = 0; i < tileLabelY.size(); i++) {
+            app.text("Tile " + (i + 1), COL_X_TILE, tileLabelY.get(i));
+        }
 
         app.fill(30, 200);
         app.noStroke();

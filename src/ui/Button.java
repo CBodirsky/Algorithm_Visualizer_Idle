@@ -19,6 +19,8 @@ public class Button {
     }
 
     public void draw(PApplet app) {
+        app.pushStyle();
+
         boolean hover = isMouseOver(app);
 
         app.stroke(255);
@@ -28,6 +30,8 @@ public class Button {
         app.fill(255);
         app.textAlign(PApplet.CENTER, PApplet.CENTER);
         app.text(label, x + w / 2, y + h / 2);
+
+        app.popStyle();
     }
 
     public boolean isMouseOver(PApplet app) {
@@ -39,6 +43,10 @@ public class Button {
         if (isMouseOver(app) && onClick != null) {
             onClick.run();
         }
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     public void drawGreyedOut(PApplet app, String subText) {

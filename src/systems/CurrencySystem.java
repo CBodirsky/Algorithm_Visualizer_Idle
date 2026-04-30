@@ -26,8 +26,14 @@ public class CurrencySystem {
         moneyMultiplier += amount;
     }
 
-    public double getRewardForSort(int arraySize) {
-        // Simple formula for now, scalable later
-        return basePayment * arraySize;
+    public void applyPrestigeBonus() { moneyMultiplier += 0.5; }
+
+    public double calculateReward(int arraySize, double payoutMultiplier, boolean doublePayoutActive) {
+        double reward = basePayment * arraySize * payoutMultiplier * moneyMultiplier;
+        if(doublePayoutActive) {
+            reward *= 2;
+        }
+        return reward;
     }
+
 }

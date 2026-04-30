@@ -17,30 +17,43 @@ public class Game extends PApplet {
     CurrencySystem currency;
     UpgradeSystem upgrades;
     TileGrid grid;
-    private float cameraX = 0;
-    private float cameraY = 0;
+    private float cameraX = 50;
+    private float cameraY = 50;
     private float cameraZoom = 1.0f;
 
     UIManager ui;
 
-    public static final int STARTING_STEP_DELAY = 10;
+    public static final int STARTING_STEP_DELAY = 50;
+    public GameState state = GameState.MENU;
     int totalSorts = 0;
-    int prestige = 15;
+    int prestige = 0;
+    public int unlockedTiles = 1;
+
+
 
     //Setters and getters
     public UpgradeSystem getUpgrades() {
         return upgrades;
     }
 
+    public RoundUpgradeSystem roundUpgrades;
+    public PrestigeSystem prestiges;
+
     public int getAvailableAlgorithms() {
         return 4; // Bubble, cocktail, insertion, selection for now
     }
-
-
+    public int getGridSize() {
+        return (int)Math.ceil(Math.sqrt(unlockedTiles));
+    }
     public CurrencySystem getCurrency() {
         return currency;
     }
     public TileGrid getGrid() { return grid; }
+    public float getCameraX() { return cameraX; }
+    public float getCameraY() { return cameraY; }
+    public float screenToWorldX(float sx) { return (sx - cameraX) / cameraZoom; }
+    public float screenToWorldY(float sy) { return (sy - cameraY) / cameraZoom; }
+
 
     //Creates a shuffled array with values within the array range to
     //give consistent bar height easily.
@@ -73,24 +86,22 @@ public class Game extends PApplet {
     public void setup() {
         currency = new CurrencySystem();
         upgrades = new UpgradeSystem();
+        roundUpgrades = new RoundUpgradeSystem();
+        prestiges = new PrestigeSystem();
         //Temp set grid layout
         grid = new TileGrid(4, 4, this);
 
         ui = new UIManager(this, this);
         //Nothing like having to call (this, this).
         //One is PApplet and the other is Game
+        ui.openPanel(new StartMenuPanel(ui));
+        state = GameState.MENU;
     }
-
-    //These next two control the camera.
-//    public void mouseDragged() {
-//        if (mouseButton == RIGHT) {
-//            cameraX += (mouseX - pmouseX);
-//            cameraY += (mouseY - pmouseY);
-//        }
-//    }
 
     //Because laptop, just doing left click to drag
     public void mouseDragged() {
+        if (state == GameState.MENU) return;
+
         if (!ui.handleClick(this)) {
             cameraX += (mouseX - pmouseX);
             cameraY += (mouseY - pmouseY);
@@ -99,6 +110,7 @@ public class Game extends PApplet {
 
     public void mouseWheel(MouseEvent event) {
         float e = event.getCount();
+        if (state == GameState.MENU) return;
         cameraZoom *= (1 - e * 0.05f);
         cameraZoom = constrain(cameraZoom, 0.2f, 5.0f);
     }
@@ -109,17 +121,20 @@ public class Game extends PApplet {
         }
     }
 
+
     //Main visualization loop: updates the simulation, draws grids, and
     //then draws the UI on top.
     public void draw() {
         background(40);
 
-        pushMatrix();
-        translate(cameraX, cameraY);
-        scale(cameraZoom);
-        grid.stepAll();
-        grid.drawAll(this);
-        popMatrix();
+        if (state != GameState.MENU) {
+            pushMatrix();
+            translate(cameraX, cameraY);
+            scale(cameraZoom);
+            grid.stepAll();
+            grid.drawAll(this);
+            popMatrix();
+        }
 
         //UI
         ui.draw(this, currency.getMoney(), totalSorts, prestige);

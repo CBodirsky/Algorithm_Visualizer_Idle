@@ -85,7 +85,7 @@ public class UpgradeButton extends Button {
                 stats.levelArraySize++;
             }
             case SORT_SPEED -> {
-                stats.sortSpeed++;
+                stats.sortSpeed = Math.max(1, stats.sortSpeed - 1);
                 stats.levelSortSpeed++;
             }
             case PAYOUT_MULTIPLIER -> {

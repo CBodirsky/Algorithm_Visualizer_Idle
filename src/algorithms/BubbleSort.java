@@ -49,7 +49,6 @@ public class BubbleSort implements SortAlgorithm {
     // returns true when finished
     @Override
     public boolean step() {
-//        System.out.println("Sorting array hash: " + System.identityHashCode(arr));
         didSwap = false;
         if (finished) return false;
 

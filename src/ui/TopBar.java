@@ -10,7 +10,7 @@ public class TopBar {
 
 
     public TopBar(UIManager ui) {
-        menuButton = new Button(10, 5, 60, 30, "Menu", ui::toggleMenu);
+        menuButton = new Button(10, 5, 70, 30, "Menu", ui::toggleMenu);
     }
 
     public void drawBackground(PApplet app) {

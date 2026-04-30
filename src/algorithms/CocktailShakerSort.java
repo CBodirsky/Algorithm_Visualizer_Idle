@@ -22,10 +22,6 @@ public class CocktailShakerSort implements SortAlgorithm {
         this.j = left;
     }
 
-//        public int getI() { return i; }
-//        public int getJ() { return j; }
-//        public boolean didSwap() { return didSwap; }
-
     @Override
     public boolean isFinished() {
         return finished;
@@ -56,7 +52,6 @@ public class CocktailShakerSort implements SortAlgorithm {
     // returns true when finished
     @Override
     public boolean step() {
-//        System.out.println("Sorting array hash: " + System.identityHashCode(arr));
         didSwap = false;
         if (finished) return false;
 

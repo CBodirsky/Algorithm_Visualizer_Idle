@@ -15,6 +15,8 @@ public class SortingController {
         private SwapAnimation swapAnim;
         private Game game;
         private TileStats stats;
+        public boolean waitingForRestart = false;
+
 
         public int stepCooldown = 0;
 
@@ -33,9 +35,7 @@ public class SortingController {
                 swapAnim.update();
         }
 
-//        public int[] getActiveIndices() {
-//                return algorithm.getActiveIndices();
-//        }
+
 
         public int[] getSwapIndices() {
                 return swapAnim.active ? new int[]{swapAnim.a, swapAnim.b} : null;
@@ -95,7 +95,6 @@ public class SortingController {
                         if (swap != null && swapAnim.active) {
                                 int a = swap[0];
                                 int b = swap[1];
-
                                 if (i == a) {
                                         x = app.lerp(b * barW, a * barW, progress);
                                 }else if (i == b) {
@@ -105,7 +104,6 @@ public class SortingController {
 
                         boolean isActive = false;
                         boolean isSwapping = false;
-
                         if (active != null) {
                                 for (int idx : active) {
                                         if (idx == i) {
@@ -114,13 +112,11 @@ public class SortingController {
                                         }
                                 }
                         }
-
                         if (swap != null) {
                                 if (swap[0] == i || swap[1] == i) {
                                         isSwapping = true;
                                 }
                         }
-
                         //Coloring of related bars
                         if (isSwapping) {
                                 app.fill(80, 255, 80);
@@ -129,16 +125,11 @@ public class SortingController {
                         } else {
                                 app.fill(70, 90, 140);
                         }
-
                         app.rect(x, h - barH, barW, barH);
                         app.fill(240);
                         app.textSize(14);
                         app.textAlign(PApplet.LEFT, PApplet.TOP);
-
-
                 }
                 app.text(algorithm.getName(), 4, 4);
         }
-
-
 }
