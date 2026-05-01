@@ -64,47 +64,35 @@ public class TileGrid {
 
         for (int r = 0; r < size; r++) {
             for (int c = 0; c < size; c++) {
-
                 if (count >= game.unlockedTiles) return;
-
                 SortingController tile = tiles[r][c];
-
                 if (tile.waitingForRestart) {
                     count++;
                     continue;
                 }
-
                 if (tile.isAnimating()) {
                     tile.updateAnimation();
                     count++;
                     continue;
                 }
-
                 if (tile.stepCooldown > 0) {
                     tile.stepCooldown--;
                     count++;
                     continue;
                 }
-
                 boolean swapped = tile.step();
                 tile.stepCooldown = tile.getSortSpeed();
-
                 if (swapped) tile.triggerSwapAnimation();
-
                 if (tile.isFinished()) {
                     boolean dp = game.roundUpgrades.doublePayout.purchased;
                     double reward = game.getCurrency().calculateReward(stats[r][c].arraySize, stats[r][c].payoutMultiplier, dp);
                     game.getCurrency().addMoney(reward);
-
                     if (game.roundUpgrades.autoSort.purchased) {
                         tiles[r][c] = createTile(stats[r][c]);
                     } else {
                         tile.waitingForRestart = true;
                     }
-
                 }
-
-
                 count++;
             }
         }

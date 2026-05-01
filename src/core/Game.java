@@ -78,9 +78,9 @@ public class Game extends PApplet {
     }
 
     public void settings() {
-//      size(1920, 1080);
+      size(1920, 1080);
 //      size(800, 600);
-        fullScreen();
+//        fullScreen();
     } //Add , P2D after height when ready
 
     public void setup() {
